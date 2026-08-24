@@ -27,14 +27,17 @@ const store = makeInMemoryStore({
     })
 })
 
-let phoneNumber = "923192173398"
+let phoneNumber = process.env.PHONE_NUMBER || process.env.PAIRING_NUMBER || global.ownernomer || "923192173398"
 let owner = JSON.parse(fs.readFileSync('./database/owner.json'))
 
 const pairingCode = !!phoneNumber || process.argv.includes("--pairing-code")
 const useMobile = process.argv.includes("--mobile")
 
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
-const question = (text) => new Promise((resolve) => rl.question(text, resolve))
+const question = (text) => new Promise((resolve) => {
+   if (!process.stdin.isTTY) return resolve(phoneNumber)
+   rl.question(text, resolve)
+})
          
 async function startXeonBotInc() {
 //------------------------------------------------------
@@ -68,7 +71,7 @@ const {  state, saveCreds } =await useMultiFileAuthState(`./session`)
    if (pairingCode && !XeonBotInc.authState.creds.registered) {
       if (useMobile) throw new Error('Cannot use pairing code with mobile api')
 
-      let phoneNumber
+      phoneNumber = phoneNumber || process.env.PHONE_NUMBER || process.env.PAIRING_NUMBER || global.ownernomer || "923192173398"
       if (!!phoneNumber) {
          phoneNumber = phoneNumber.replace(/[^0-9]/g, '')
 

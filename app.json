@@ -16,6 +16,11 @@
   "website": "https://whatsapp.com/channel/0029VaDK8ZUDjiOhwFS1cP2j",
   "success_url": "/",
   "env": {
+    "PHONE_NUMBER": {
+      "description": "Your WhatsApp phone number with country code (e.g., 923192173398) to receive pairing code in logs",
+      "value": "923192173398",
+      "required": false
+    },
     "NPM_CONFIG_LEGACY_PEER_DEPS": {
       "description": "Bypass peer dependency resolution conflicts during build",
       "value": "true",
