@@ -33,6 +33,8 @@ let owner = JSON.parse(fs.readFileSync('./database/owner.json'))
 const pairingCode = !!phoneNumber || process.argv.includes("--pairing-code")
 const useMobile = process.argv.includes("--mobile")
 
+const { restoreSessionFromMongo, saveSessionToMongo } = require('./lib/mongoSession')
+
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
 const question = (text) => new Promise((resolve) => {
    if (!process.stdin.isTTY) return resolve(phoneNumber)
@@ -45,6 +47,10 @@ if (!fs.existsSync('./session')) {
    fs.mkdirSync('./session', { recursive: true })
 }
 
+// 1. Try restoring session from MongoDB if MONGODB_URI is provided
+await restoreSessionFromMongo('./session')
+
+// 2. Try restoring session from SESSION_ID if provided
 if (process.env.SESSION_ID && !fs.existsSync('./session/creds.json')) {
    try {
       let sessionData = process.env.SESSION_ID.trim()
@@ -66,7 +72,7 @@ if (process.env.SESSION_ID && !fs.existsSync('./session/creds.json')) {
 }
 
 let { version, isLatest } = await fetchLatestBaileysVersion()
-const {  state, saveCreds } =await useMultiFileAuthState(`./session`)
+const {  state, saveCreds } = await useMultiFileAuthState(`./session`)
     const msgRetryCounterCache = new NodeCache() // for retry message, "waiting message"
     const XeonBotInc = makeWASocket({
         logger: pino({ level: 'silent' }),
@@ -206,6 +212,7 @@ const {  state, saveCreds } =await useMultiFileAuthState(`./session`)
     XeonBotInc.ev.on("connection.update",async  (s) => {
         const { connection, lastDisconnect } = s
         if (connection == "open") {
+            await saveSessionToMongo('./session')
             if (process.send) {
                process.send({ type: 'status', status: 'connected', user: XeonBotInc.user })
             }
@@ -232,7 +239,10 @@ const {  state, saveCreds } =await useMultiFileAuthState(`./session`)
             startXeonBotInc()
         }
     })
-    XeonBotInc.ev.on('creds.update', saveCreds)
+    XeonBotInc.ev.on('creds.update', async () => {
+        await saveCreds()
+        await saveSessionToMongo('./session')
+    })
     XeonBotInc.ev.on("messages.upsert",  () => { })
 
     XeonBotInc.sendText = (jid, text, quoted = '', options) => XeonBotInc.sendMessage(jid, {

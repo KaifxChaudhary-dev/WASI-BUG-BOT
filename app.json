@@ -16,6 +16,11 @@
   "website": "https://whatsapp.com/channel/0029VaDK8ZUDjiOhwFS1cP2j",
   "success_url": "/",
   "env": {
+    "MONGODB_URI": {
+      "description": "MongoDB connection string for permanent session backup across dyno restarts (Optional)",
+      "value": "",
+      "required": false
+    },
     "SESSION_ID": {
       "description": "Put your session id here if you have one (Optional if using Pairing Code)",
       "value": "",
