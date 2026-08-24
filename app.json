@@ -12,9 +12,16 @@
     "multi-device"
   ],
   "logo": "https://telegra.ph/file/b8bda8d243f53c191a69b.jpg",
-  "repository": "https://github.com/wasi-ser/WASI-BUG-BOT",
+  "repository": "https://github.com/KaifxChaudhary-dev/WASI-BUG-BOT",
   "website": "https://whatsapp.com/channel/0029VaDK8ZUDjiOhwFS1cP2j",
   "success_url": "/",
+  "env": {
+    "NPM_CONFIG_LEGACY_PEER_DEPS": {
+      "description": "Bypass peer dependency resolution conflicts during build",
+      "value": "true",
+      "required": false
+    }
+  },
   "formation": {
     "worker": {
       "quantity": 1,
