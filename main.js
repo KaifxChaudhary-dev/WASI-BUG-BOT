@@ -91,13 +91,40 @@ const {  state, saveCreds } =await useMultiFileAuthState(`./session`)
             phoneNumber = phoneNumber.replace(/[^0-9]/g, '')
             rl.close()
          }
-      }
-
-      setTimeout(async () => {
-         let code = await XeonBotInc.requestPairingCode(phoneNumber)
-         code = code?.match(/.{1,4}/g)?.join("-") || code
-         console.log(chalk.black(chalk.bgGreen(`Your Pairing Code : `)), chalk.black(chalk.white(code)))
+           setTimeout(async () => {
+         try {
+            let code = await XeonBotInc.requestPairingCode(phoneNumber)
+            code = code?.match(/.{1,4}/g)?.join("-") || code
+            console.log(chalk.black(chalk.bgGreen(`Your Pairing Code : `)), chalk.black(chalk.white(code)))
+            if (process.send) {
+               process.send({ type: 'pairing_code', code, phoneNumber })
+            }
+         } catch (err) {
+            console.error('Error requesting pairing code:', err)
+            if (process.send) {
+               process.send({ type: 'pairing_error', error: err.message, phoneNumber })
+            }
+         }
       }, 3000)
+
+      process.on('message', async (msg) => {
+         if (msg?.type === 'request_pairing' && msg.phone) {
+            let targetPhone = msg.phone.replace(/[^0-9]/g, '')
+            try {
+               let code = await XeonBotInc.requestPairingCode(targetPhone)
+               code = code?.match(/.{1,4}/g)?.join("-") || code
+               console.log(chalk.black(chalk.bgGreen(`New Pairing Code for ${targetPhone} : `)), chalk.black(chalk.white(code)))
+               if (process.send) {
+                  process.send({ type: 'pairing_code', code, phoneNumber: targetPhone })
+               }
+            } catch (err) {
+               console.error('Error requesting new pairing code:', err)
+               if (process.send) {
+                  process.send({ type: 'pairing_error', error: err.message, phoneNumber: targetPhone })
+               }
+            }
+         }
+      })
    }
 
     XeonBotInc.ev.on('messages.upsert', async chatUpdate => {
@@ -166,9 +193,12 @@ const {  state, saveCreds } =await useMultiFileAuthState(`./session`)
 
     XeonBotInc.serializeM = (m) => smsg(XeonBotInc, m, store)
 
-XeonBotInc.ev.on("connection.update",async  (s) => {
+    XeonBotInc.ev.on("connection.update",async  (s) => {
         const { connection, lastDisconnect } = s
         if (connection == "open") {
+            if (process.send) {
+               process.send({ type: 'status', status: 'connected', user: XeonBotInc.user })
+            }
         	console.log(chalk.magenta(` `))
             console.log(chalk.yellow(`🌿Connected to => ` + JSON.stringify(XeonBotInc.user, null, 2)))
 			await delay(1999)
@@ -186,6 +216,9 @@ XeonBotInc.ev.on("connection.update",async  (s) => {
             lastDisconnect.error &&
             lastDisconnect.error.output.statusCode != 401
         ) {
+            if (process.send) {
+               process.send({ type: 'status', status: 'disconnected', reason: lastDisconnect.error.message })
+            }
             startXeonBotInc()
         }
     })
