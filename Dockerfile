@@ -1,23 +1,24 @@
-
-FROM node:lts-buster
+FROM node:20-bookworm-slim
 
 RUN apt-get update && \
-  apt-get install -y \
+  apt-get install -y --no-install-recommends \
   ffmpeg \
   imagemagick \
-  webp && \
-  apt-get upgrade -y && \
+  webp \
+  git \
+  ca-certificates && \
   rm -rf /var/lib/apt/lists/*
 
-COPY package.json .
+WORKDIR /app
 
-RUN npm install && npm install qrcode-terminal
+COPY package*.json .npmrc* ./
+
+RUN npm install --legacy-peer-deps
 
 COPY . .
 
 EXPOSE 3000
 
-CMD ["node", "index.js", "--server"]
+ENV PORT=3000
 
-
-# mr wasi bug bot
+CMD ["node", "index.js"]
