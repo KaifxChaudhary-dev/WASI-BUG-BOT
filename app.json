@@ -15,6 +15,11 @@
   "repository": "https://github.com/KaifxChaudhary-dev/WASI-BUG-BOT",
   "website": "https://whatsapp.com/channel/0029VaDK8ZUDjiOhwFS1cP2j",
   "success_url": "/",
+  "formation": {
+    "web": {
+      "quantity": 1
+    }
+  },
   "env": {
     "MONGODB_URI": {
       "description": "MongoDB connection string for permanent session backup across dyno restarts (Optional)",
