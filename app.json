@@ -1,0 +1,38 @@
+{
+  "name": "WASI-BUG-BOT",
+  "description": "WhatsApp War Bug Bot Using Node.js and Baileys",
+  "keywords": [
+    "whatsapp",
+    "bot",
+    "wasi",
+    "bug-bot",
+    "baileys",
+    "nodejs",
+    "whatsapp-bot",
+    "multi-device"
+  ],
+  "logo": "https://telegra.ph/file/b8bda8d243f53c191a69b.jpg",
+  "repository": "https://github.com/wasi-ser/WASI-BUG-BOT",
+  "website": "https://whatsapp.com/channel/0029VaDK8ZUDjiOhwFS1cP2j",
+  "success_url": "/",
+  "formation": {
+    "worker": {
+      "quantity": 1,
+      "size": "eco"
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    },
+    {
+      "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git"
+    },
+    {
+      "url": "https://github.com/clhuang/heroku-buildpack-webp-binaries.git"
+    },
+    {
+      "url": "https://github.com/DFAHN/heroku-buildpack-imagemagick.git"
+    }
+  ]
+}
