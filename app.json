@@ -16,9 +16,59 @@
   "website": "https://whatsapp.com/channel/0029VaDK8ZUDjiOhwFS1cP2j",
   "success_url": "/",
   "env": {
+    "SESSION_ID": {
+      "description": "Put your session id here if you have one (Optional if using Pairing Code)",
+      "value": "",
+      "required": false
+    },
     "PHONE_NUMBER": {
-      "description": "Your WhatsApp phone number with country code (e.g., 923192173398) to receive pairing code in logs",
+      "description": "Your WhatsApp phone number with country code (e.g., 923192173398) for pairing code",
       "value": "923192173398",
+      "required": false
+    },
+    "OWNER_NUMBER": {
+      "description": "Bot Owner WhatsApp Number (e.g., 923347748038)",
+      "value": "923347748038",
+      "required": false
+    },
+    "OWNER_NAME": {
+      "description": "Bot Owner Display Name",
+      "value": "MR WASI",
+      "required": false
+    },
+    "BOT_NAME": {
+      "description": "Bot Display Name",
+      "value": "WASI TECH BUG BOT",
+      "required": false
+    },
+    "PREFIX": {
+      "description": "Command prefixes separated by comma (e.g. .,!,#)",
+      "value": ".,!,#,&",
+      "required": false
+    },
+    "AUTO_STATUS_VIEW": {
+      "description": "Automatically view status/stories (true or false)",
+      "value": "true",
+      "required": false
+    },
+    "AUTO_READ": {
+      "description": "Automatically mark messages as read (true or false)",
+      "value": "false",
+      "required": false
+    },
+    "AUTO_TYPING": {
+      "description": "Show typing status automatically (true or false)",
+      "value": "false",
+      "required": false
+    },
+    "AUTO_RECORDING": {
+      "description": "Show recording status automatically (true or false)",
+      "value": "false",
+      "required": false
+    },
+    "AUTO_BIO": {
+      "description": "Automatically update WhatsApp bio (true or false)",
+      "value": "true",
       "required": false
     },
     "NPM_CONFIG_LEGACY_PEER_DEPS": {

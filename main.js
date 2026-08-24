@@ -41,6 +41,30 @@ const question = (text) => new Promise((resolve) => {
          
 async function startXeonBotInc() {
 //------------------------------------------------------
+if (!fs.existsSync('./session')) {
+   fs.mkdirSync('./session', { recursive: true })
+}
+
+if (process.env.SESSION_ID && !fs.existsSync('./session/creds.json')) {
+   try {
+      let sessionData = process.env.SESSION_ID.trim()
+      if (sessionData.startsWith('{')) {
+         fs.writeFileSync('./session/creds.json', sessionData)
+         console.log(chalk.green('Restored session from SESSION_ID JSON'))
+      } else if (sessionData.length > 20) {
+         try {
+            let decoded = Buffer.from(sessionData, 'base64').toString('utf-8')
+            if (decoded.startsWith('{')) {
+               fs.writeFileSync('./session/creds.json', decoded)
+               console.log(chalk.green('Restored session from SESSION_ID Base64'))
+            }
+         } catch (e) {}
+      }
+   } catch (err) {
+      console.error('Failed to parse SESSION_ID:', err.message)
+   }
+}
+
 let { version, isLatest } = await fetchLatestBaileysVersion()
 const {  state, saveCreds } =await useMultiFileAuthState(`./session`)
     const msgRetryCounterCache = new NodeCache() // for retry message, "waiting message"

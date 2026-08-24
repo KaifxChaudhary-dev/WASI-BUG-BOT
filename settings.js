@@ -3,45 +3,45 @@ const fs = require('fs')
 const chalk = require('chalk')
 
 //contact details
-global.ownernomer = "923192173398"
-global.ownername = "🐛 MR WASI "
-global.ytname = "YT: Dont have"
-global.socialm = "GitHub: private"
-global.location = "Pakistan, Lahore"
+global.ownernomer = process.env.PHONE_NUMBER || process.env.OWNER_NUMBER || "923192173398"
+global.ownername = process.env.OWNER_NAME || "🐛 MR WASI "
+global.ytname = process.env.YT_NAME || "YT: Dont have"
+global.socialm = process.env.SOCIAL_M || "GitHub: private"
+global.location = process.env.LOCATION || "Pakistan, Lahore"
 
-global.ownernumber = '923347748038'  //creator number
-global.ownername = ' MR WASI ' //owner name
-global.botname = 'WASI TECH BUG BOT ' //name of the bot
+global.ownernumber = process.env.OWNER_NUMBER || '923347748038'  //creator number
+global.ownername = process.env.OWNER_NAME || ' MR WASI ' //owner name
+global.botname = process.env.BOT_NAME || 'WASI TECH BUG BOT ' //name of the bot
 
 //sticker details
-global.packname = 'Sticker By'
-global.author = 'WASI'
+global.packname = process.env.PACK_NAME || 'Sticker By'
+global.author = process.env.AUTHOR_NAME || 'WASI'
 
 //console view/theme
-global.themeemoji = '🪀'
-global.wm = "WASI TECH"
+global.themeemoji = process.env.THEME_EMOJI || '🪀'
+global.wm = process.env.WATERMARK || "WASI TECH"
 
 //theme link
-global.link = 'https://whatsapp.com'
+global.link = process.env.THEME_LINK || 'https://whatsapp.com'
 
 //custom prefix
-global.prefa = ['','!','.','#','&']
+global.prefa = process.env.PREFIX ? process.env.PREFIX.split(',') : ['','!','.','#','&']
 
 //false=disable and true=enable
-global.autoRecording = false //auto recording
-global.autoTyping = false //auto typing
-global.autorecordtype = false //auto typing + recording
-global.autoread = false //auto read messages
-global.autobio = true //auto update bio
-global.anti92 = false //auto block +92 
-global.autoswview = true //auto view status/story
+global.autoRecording = process.env.AUTO_RECORDING === 'true' || false //auto recording
+global.autoTyping = process.env.AUTO_TYPING === 'true' || false //auto typing
+global.autorecordtype = process.env.AUTO_RECORD_TYPE === 'true' || false //auto typing + recording
+global.autoread = process.env.AUTO_READ === 'true' || false //auto read messages
+global.autobio = process.env.AUTO_BIO !== 'false' //auto update bio
+global.anti92 = process.env.ANTI_92 === 'true' || false //auto block +92 
+global.autoswview = process.env.AUTO_STATUS_VIEW !== 'false' //auto view status/story
 
 //menu type 
 //v1 is image menu, 
 //v2 is link + image menu,
 //v3 is video menu,
 //v4 is call end menu
-global.typemenu = 'v2'
+global.typemenu = process.env.TYPE_MENU || 'v2'
 
 //text bug
 global.xbugtex = {
