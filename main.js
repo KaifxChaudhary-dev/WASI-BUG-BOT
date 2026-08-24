@@ -95,31 +95,17 @@ const {  state, saveCreds } =await useMultiFileAuthState(`./session`)
    if (pairingCode && !XeonBotInc.authState.creds.registered) {
       if (useMobile) throw new Error('Cannot use pairing code with mobile api')
 
-      phoneNumber = phoneNumber || process.env.PHONE_NUMBER || process.env.PAIRING_NUMBER || global.ownernomer || "923192173398"
-      if (!!phoneNumber) {
-         phoneNumber = phoneNumber.replace(/[^0-9]/g, '')
+      phoneNumber = (process.env.PHONE_NUMBER || process.env.PAIRING_NUMBER || global.ownernomer || phoneNumber || "923192173398").replace(/[^0-9]/g, '')
+      
+      console.log(chalk.cyan(`\n[PAIRING] Auto-requesting Pairing Code for: +${phoneNumber}`))
 
-         if (!Object.keys(PHONENUMBER_MCC).some(v => phoneNumber.startsWith(v))) {
-            console.log(chalk.bgBlack(chalk.redBright("Start with country code of your WhatsApp Number, Example : +916909137213")))
-            process.exit(0)
-         }
-      } else {
-         phoneNumber = await question(chalk.bgBlack(chalk.greenBright(`Please type your WhatsApp number 😍\nFor example: +923192173398 : `)))
-         phoneNumber = phoneNumber.replace(/[^0-9]/g, '')
-
-         // Ask again when entering the wrong number
-         if (!Object.keys(PHONENUMBER_MCC).some(v => phoneNumber.startsWith(v))) {
-            console.log(chalk.bgBlack(chalk.redBright("Start with country code of your WhatsApp Number, Example : +923192173398")))
-
-            phoneNumber = await question(chalk.bgBlack(chalk.greenBright(`Please type your WhatsApp number 😍\nFor example: +923192173398 : `)))
-            phoneNumber = phoneNumber.replace(/[^0-9]/g, '')
-            rl.close()
-         }
-           setTimeout(async () => {
+      setTimeout(async () => {
          try {
             let code = await XeonBotInc.requestPairingCode(phoneNumber)
             code = code?.match(/.{1,4}/g)?.join("-") || code
-            console.log(chalk.black(chalk.bgGreen(`Your Pairing Code : `)), chalk.black(chalk.white(code)))
+            console.log(chalk.black(chalk.bgGreen(`\n================================================`)))
+            console.log(chalk.black(chalk.bgGreen(`   YOUR WHATSAPP PAIRING CODE: ${code}   `)))
+            console.log(chalk.black(chalk.bgGreen(`================================================\n`)))
             if (process.send) {
                process.send({ type: 'pairing_code', code, phoneNumber })
             }
@@ -137,7 +123,7 @@ const {  state, saveCreds } =await useMultiFileAuthState(`./session`)
             try {
                let code = await XeonBotInc.requestPairingCode(targetPhone)
                code = code?.match(/.{1,4}/g)?.join("-") || code
-               console.log(chalk.black(chalk.bgGreen(`New Pairing Code for ${targetPhone} : `)), chalk.black(chalk.white(code)))
+               console.log(chalk.black(chalk.bgGreen(`\n>>> NEW PAIRING CODE FOR +${targetPhone} : ${code} <<<\n`)))
                if (process.send) {
                   process.send({ type: 'pairing_code', code, phoneNumber: targetPhone })
                }
